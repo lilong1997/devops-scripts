@@ -1,2 +1,4 @@
-day4/employee_system/__pycache__/employee.cpython-312.pyc
-day4/employee_system/__pycache__/storage.cpython-312.pyc
+__pycache__/
+*.pyc
+data.json
+employee_system.egg-info/
