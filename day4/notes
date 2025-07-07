@@ -1,0 +1,65 @@
+一、模块拆分（多文件Python项目）
+把函数写在单独的文件里，比如employee.py
+
+# employee.py
+def add_employee():
+    ...
+
+def list_employees():
+    ...
+
+在main.py里用import或from调用
+
+# main.py
+from employee import add_employee
+
+add_employee()
+
+二、JSON文件读写（保存数据到硬盘）
+1.写入数据到JSON文件
+
+import json
+
+data = [{'name': '张三', 'age': 25}]
+with open('data.json', 'w', encoding='utf-8') as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)
+
+data：要写入的Python对象（必须是字典、列表）
+f：文件句柄，使用open()打开的文件
+ensure_ascii=False 是否转义中文，设置为False保留中文（否则显示 \u4e2d\u6587）
+indent=2 设置缩进，使输出格式更美观，值越大缩进越多，不写indent会变成一行一坨，看不清!
+
+2.从JSON文件读取数据
+
+with open('data.json', 'r', encoding='utf-8') as f:
+    employees = json.load(f)
+
+json.load(f)读取JSON文件并把内容转成Python对象（比如列表、字典）
+返回值就是在程序中可以操作的数据
+
+3.判断文件是否存在（第一次运行时用）
+
+import os
+
+if not os.path.exists('data.json'):
+    employees = []
+
+
+三、项目组织结构（推荐这样写）
+
+employee_system/
+├── main.py         # 程序入口，负责菜单
+├── employee.py     # 员工操作（增删查）
+├── storage.py      # 读写 JSON 文件
+├── data.json       # 保存员工数据
+
+每写一个功能模块，就拆成一个文件，更利于维护和扩展
+
+
+四、补充：Python之间如何共享数据（思维模型）
+main.py ←→ employee.py ←→ storage.py
+- main.py调用employee.add_employee()
+- employee.py内部使用storage.load_data()加载员工列表
+- 修改完再用storage.save_data()存回文件
+这样数据就用输入→ 内存 → 文件 → 再读出来，形成闭环。
+
